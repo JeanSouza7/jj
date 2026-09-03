@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Jennyfer, quer sair comigo?</title>
+<style>
+  :root{
+    --pink-1:#ff5fa8;
+    --pink-2:#ff2d87;
+    --pink-3:#ff6fa5;
+    --purple:#a83ce0;
+    --bg:#0a0a0d;
+    --card-bg:#161018;
+    --text:#f5e6ef;
+    --white:#1c1420;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{
+    margin:0; padding:0; height:100%;
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,45,135,.22), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(168,60,224,.22), transparent 45%),
+      var(--bg);
+    overflow:hidden;
+    color:var(--text);
+  }
+  #hearts{
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+  }
+  .heart{
+    position:absolute;
+    bottom:-40px;
+    font-size:22px;
+    opacity:.55;
+    animation:float linear infinite;
+    user-select:none;
+  }
+  @keyframes float{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0; }
+    10%{ opacity:.6; }
+    100%{ transform:translateY(-110vh) rotate(360deg); opacity:0; }
+  }
+
+  .screen{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    text-align:center;
+    z-index:2;
+  }
+  .hidden{ display:none !important; }
+
+  .card{
+    background:var(--card-bg);
+    border:1px solid rgba(255,111,165,.25);
+    border-radius:28px;
+    padding:34px 24px;
+    max-width:380px;
+    width:100%;
+    box-shadow:0 18px 45px rgba(255,45,135,.18), 0 0 0 1px rgba(255,111,165,.06) inset;
+    animation:pop .5s ease;
+  }
+  @keyframes pop{
+    from{ transform:scale(.85); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+  }
+
+  h1{
+    font-size:1.5rem;
+    margin:0 0 6px;
+    line-height:1.3;
+  }
+  p.sub{
+    margin:0 0 26px;
+    color:#c98fae;
+    font-size:.95rem;
+  }
+
+  .btn-row{
+    position:relative;
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    min-height:130px;
+    align-items:flex-start;
+  }
+
+  button{
+    border:none;
+    border-radius:50px;
+    padding:14px 30px;
+    font-size:1.05rem;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+
+  #btnYes{
+    background:linear-gradient(135deg, var(--pink-3), var(--purple));
+    color:#fff;
+    box-shadow:0 8px 18px rgba(255,111,165,.45);
+    transition:transform .2s ease;
+  }
+  #btnYes:active{ transform:scale(.95); }
+
+  #btnNo{
+    background:#241a29;
+    border:1px solid rgba(255,111,165,.3);
+    color:var(--text);
+    position:relative;
+    transition:transform .12s ease;
+    touch-action:none;
+  }
+  #btnNo.floating{
+    position:fixed;
+    z-index:50;
+  }
+
+  #screenYes h1{ margin-bottom:14px; }
+  .emoji-big{
+    font-size:3rem;
+    margin-bottom:6px;
+    display:block;
+  }
+
+  input[type="date"]{
+    margin-top:18px;
+    padding:14px 16px;
+    border-radius:16px;
+    border:2px solid var(--pink-2);
+    font-size:1rem;
+    width:100%;
+    font-family:inherit;
+    color:var(--text);
+    background:#241a29;
+    color-scheme:dark;
+  }
+
+  #btnConfirm{
+    margin-top:20px;
+    width:100%;
+    background:linear-gradient(135deg, var(--pink-3), var(--purple));
+    color:#fff;
+    box-shadow:0 8px 18px rgba(255,111,165,.45);
+    opacity:.5;
+    pointer-events:none;
+    transition:opacity .2s ease;
+  }
+  #btnConfirm.active{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  #finalDate{
+    font-weight:700;
+    color:var(--pink-3);
+  }
+
+  .confetti{
+    position:fixed;
+    top:-20px;
+    font-size:20px;
+    z-index:40;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(400deg); opacity:.2; }
+  }
+</style>
+</head>
+<body>
+
+<div id="hearts"></div>
+
+<!-- TELA 1: PERGUNTA -->
+<div class="screen" id="screenAsk">
+  <div class="card">
+    <span class="emoji-big">💌</span>
+    <h1>Jennyfer, quer sair comigo?</h1>
+    <p class="sub">pensa bem antes de responder... 👀</p>
+    <div class="btn-row">
+      <button id="btnYes">Sim </button>
+      <button id="btnNo">Não</button>
+    </div>
+  </div>
+</div>
+
+<!-- TELA 2: ACEITOU -->
+<div class="screen hidden" id="screenYes">
+  <div class="card">
+    <span class="emoji-big">🥰</span>
+    <h1>Eu sabia que você ia aceitar!</h1>
+    <p class="sub">agora escolhe o melhor dia pra gente sair:</p>
+    <input type="date" id="datePicker">
+    <button id="btnConfirm">Confirmar dia ➜</button>
+  </div>
+</div>
+
+<!-- TELA 3: CONFIRMADO -->
+<div class="screen hidden" id="screenFinal">
+  <div class="card">
+    <span class="emoji-big"></span>
+    <h1>Fico feliz em sair com você no dia <span id="finalDate"></span>!</h1>
+    <p class="sub">vai ser incrível 💕</p>
+  </div>
+</div>
+
+<script>
+  // corações flutuando no fundo
+  const heartsContainer = document.getElementById('hearts');
+  const heartEmojis = ['💗','💖','💕','💓','💞'];
+  for(let i=0;i<18;i++){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
+    h.style.left = Math.random()*100 + 'vw';
+    h.style.animationDuration = (6 + Math.random()*8) + 's';
+    h.style.animationDelay = (Math.random()*8) + 's';
+    heartsContainer.appendChild(h);
+  }
+
+  // Botão NÃO foge do toque/clique
+  const btnNo = document.getElementById('btnNo');
+  const btnRow = document.querySelector('.btn-row');
+
+  function moveNoButton(){
+    const btnWidth = btnNo.offsetWidth;
+    const btnHeight = btnNo.offsetHeight;
+    const margin = 20;
+
+    const maxX = window.innerWidth - btnWidth - margin;
+    const maxY = window.innerHeight - btnHeight - margin;
+
+    const newX = margin + Math.random() * (maxX - margin);
+    const newY = margin + Math.random() * (maxY - margin);
+
+    btnNo.classList.add('floating');
+    btnNo.style.left = newX + 'px';
+    btnNo.style.top = newY + 'px';
+  }
+
+  // foge apenas quando tentam clicar/tocar nele (não ao passar o mouse por cima)
+  ['pointerdown','touchstart'].forEach(evt=>{
+    btnNo.addEventListener(evt, (e)=>{
+      e.preventDefault();
+      moveNoButton();
+    }, {passive:false});
+  });
+  // garante que mesmo que o "clique" complete, ele já fugiu e nada acontece
+  btnNo.addEventListener('click', (e)=>{
+    e.preventDefault();
+    moveNoButton();
+  });
+
+  // Botão SIM
+  const screenAsk = document.getElementById('screenAsk');
+  const screenYes = document.getElementById('screenYes');
+  const screenFinal = document.getElementById('screenFinal');
+
+  document.getElementById('btnYes').addEventListener('click', ()=>{
+    screenAsk.classList.add('hidden');
+    screenYes.classList.remove('hidden');
+    btnNo.classList.remove('floating');
+  });
+
+  // Seletor de data
+  const datePicker = document.getElementById('datePicker');
+  const btnConfirm = document.getElementById('btnConfirm');
+
+  datePicker.addEventListener('change', ()=>{
+    if(datePicker.value){
+      btnConfirm.classList.add('active');
+    } else {
+      btnConfirm.classList.remove('active');
+    }
+  });
+
+  function launchConfetti(){
+    const emojis = ['🎉','💖','✨','💕','🎊'];
+    for(let i=0;i<30;i++){
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      c.style.left = Math.random()*100 + 'vw';
+      c.style.animationDuration = (2 + Math.random()*2) + 's';
+      c.style.fontSize = (16 + Math.random()*14) + 'px';
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(), 4000);
+    }
+  }
+
+  btnConfirm.addEventListener('click', ()=>{
+    if(!datePicker.value) return;
+    const dateObj = new Date(datePicker.value + 'T00:00:00');
+    const formatted = dateObj.toLocaleDateString('pt-BR', {
+      day:'2-digit', month:'long', year:'numeric'
+    });
+    document.getElementById('finalDate').textContent = formatted;
+    screenYes.classList.add('hidden');
+    screenFinal.classList.remove('hidden');
+    launchConfetti();
+  });
+</script>
+
+</body>
+</html>
