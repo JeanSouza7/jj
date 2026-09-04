@@ -182,7 +182,7 @@
 <div class="screen" id="screenAsk">
   <div class="card">
     <span class="emoji-big">💌</span>
-    <h1>Jennyfer, quer sair comigo?</h1>
+    <h1> quer sair comigo?</h1>
     <p class="sub">pensa bem antes de responder... 👀</p>
     <div class="btn-row">
       <button id="btnYes">Sim </button>
@@ -305,8 +305,8 @@
       body: JSON.stringify({
         access_key: WEB3FORMS_KEY,
         subject: "Ela respondeu! 💌",
-        from_name: "Convite - Jennyfer",
-        message: "Jennyfer disse SIM e escolheu o dia: " + dataFormatada
+        from_name: "",
+        message: " disse SIM e escolheu o dia: " + dataFormatada
       })
     }).catch(err => console.log("Erro ao enviar:", err));
   }
